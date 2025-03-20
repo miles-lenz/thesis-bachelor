@@ -1,17 +1,17 @@
 """ This module contains different plotting functions. """
 
-import mujoco.viewer
-from mimoGrowth.constants import AGE_GROUPS
-from mimoGrowth.growth import adjust_mimo_to_age, delete_growth_scene
-from mimoGrowth.utils import load_measurements, store_base_values, \
+from resources.mimoGrowth.constants import AGE_GROUPS
+from resources.mimoGrowth.growth import adjust_mimo_to_age, delete_growth_scene
+from resources.mimoGrowth.utils import load_measurements, store_base_values, \
     approximate_growth_functions
-from mimoGrowth.utils import growth_function as func
-from mimoGrowth.growth import calc_growth_params
-import argparse
+from resources.mimoGrowth.utils import growth_function as func
+from resources.mimoGrowth.growth import calc_growth_params
 from collections import defaultdict
+import argparse
 import os
 import re
 import mujoco
+import mujoco.viewer
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -62,46 +62,6 @@ def growth_function(measurement: str = "head_circumference") -> None:
     plt.show()
 
 
-def quick():
-    """
-    ...
-    """
-
-    ages = np.linspace(0, 24, 50)
-
-    mass, gear = [], [[], [], []]
-    avg_gear, avg_gear2 = [], []
-
-    for age in ages:
-
-        growth_params = calc_growth_params(age, "mimoEnv/assets/growth.xml")
-
-        mass.append(growth_params["geom"]["head"]["mass"])
-        gear[0].append(growth_params["motor"]["act:head_swivel"]["gear"])
-        gear[1].append(growth_params["motor"]["act:head_tilt"]["gear"])
-
-        all_gear, all_gear2 = [], []
-        for motor in growth_params["motor"]:
-            all_gear.append(growth_params["motor"][motor]["gear"])
-            all_gear2.append(growth_params["motor"][motor]["gear2"])
-
-        avg_gear.append(np.mean(all_gear))
-        avg_gear2.append(np.mean(all_gear2))
-
-    plt.xlabel("Age (Months)")
-    # plt.ylabel("Mass (kg)")
-    plt.ylabel("Gear Value")
-
-    # plt.plot(ages, mass, label="geom:head")
-    plt.plot(ages, gear[0], label="act:head_swivel")
-    plt.plot(ages, gear[1], label="act:head_tilt")
-    # plt.plot(ages, avg_gear, label="Volume")
-    # plt.plot(ages, avg_gear2, label="CSA")
-
-    plt.legend()
-    plt.show()
-
-
 def all_growth_functions() -> None:
     """
     This function plots all growth function in a single plot.
@@ -115,7 +75,7 @@ def all_growth_functions() -> None:
     i = 0
     for body_part in measurements:
 
-        plt.subplot(3, 5, i + 1)
+        plt.subplot(4, 4, i + 1)
 
         params = functions[body_part]
         pred = func(age_samples, *params)
@@ -141,10 +101,13 @@ def all_growth_functions() -> None:
     plt.show()
 
 
-def different_function_types(type_: str) -> None:
+def diff_func_type(type_: str) -> None:
     """
     This function plots a fitted growth function that is based
     on a different function type e.g. polynomial or splines.
+
+    Arguments:
+        type_ (str): Either 'poly' or 'spline'.
     """
 
     def growth_func(x, a, b, c, d):
@@ -217,7 +180,7 @@ def density() -> None:
     plotted once since they have the same density.
     """
 
-    base_values = store_base_values("mimoEnv/assets/growth.xml")
+    base_values = store_base_values("resources/mimoEnv/assets/growth.xml")
 
     names, densities = [], []
 
@@ -238,6 +201,64 @@ def density() -> None:
     plt.show()
 
 
+def growth_param(
+        metric: str = "mass", geoms: str = None, motors: str = None) -> None:
+    """
+    This function plots the development of mass or strength. It can either plot
+    the average values of the growth of specific geoms/motors.
+
+    Arguments:
+        metric (str): Needs to be 'mass' or 'gear'.
+        geom (str): The geom for which to plot the mass. Plot multiple geoms
+            by separating them with a comma. Default is None, which plots the
+            average mass of all geoms.
+        motor (str): The motor for which to plot the gear value. Plot multiple
+            motors by separating them with a comma. Default is None, which
+            plots the average gear of all motors.
+    """
+
+    scene = "resources/mimoEnv/assets/growth.xml"
+    ages = np.linspace(0, 24, 25)
+
+    mass, avg_mass = [], []
+    gear, avg_gear = [], []
+
+    for age in ages:
+
+        growth_params = calc_growth_params(age, scene)
+
+        params_geoms = growth_params["geom"]
+        params_motors = growth_params["motor"]
+
+        if geoms:
+            for geom in geoms.split(","):
+                mass.append(params_geoms[geom]["mass"])
+        if motors:
+            for motor in motors.split(","):
+                gear.append(params_motors[motor]["gear"])
+
+        all_mass = [params_geoms[g]["mass"] for g in params_geoms]
+        avg_mass.append(np.mean(all_mass))
+
+        all_gear = [params_motors[m]["gear"] for m in params_motors]
+        avg_gear.append(np.mean(all_gear))
+
+    plt.xlabel("Age (Months)")
+    plt.ylabel("Mass (kg)" if metric == "mass" else "Gear Value")
+
+    y_mass = mass if geoms else avg_mass
+    y_gear = gear if motors else avg_gear
+    y = y_mass if metric == "mass" else y_gear
+
+    label_mass = geom if geoms else "Average Mass"
+    label_gear = motor if motors else "Average Gear"
+    label = label_mass if metric == "mass" else label_gear
+    plt.plot(ages, y, label=label)
+
+    plt.legend()
+    plt.show()
+
+
 def comparison_who(metric: str = "height") -> None:
     """
     This function will compare a growth parameter of MIMo and
@@ -253,7 +274,7 @@ def comparison_who(metric: str = "height") -> None:
 
     data = {"mimo": defaultdict(list), "WHO": {}}
 
-    path = "mimoGrowth_temp/growth_charts/"
+    path = "resources/growth_charts/"
     for dirpath, _, filenames in os.walk(path):
 
         if filenames == []:
@@ -276,7 +297,7 @@ def comparison_who(metric: str = "height") -> None:
         print(f"{(i / len(age_mimo) * 100):.2f}%", end="\r")
 
         growth_scene = adjust_mimo_to_age(
-            age, "mimoEnv/assets/growth.xml", False)
+            age, "resources/mimoEnv/assets/growth.xml", False)
 
         mj_model = mujoco.MjModel.from_xml_path(growth_scene)
         mj_data = mujoco.MjData(mj_model)
@@ -337,17 +358,22 @@ def comparison_who(metric: str = "height") -> None:
 
 
 def tensorboard(
-        experiment: str, metric: str, ages: str, start: str = "") -> None:
+        experiment: str, metric: str, ages: list,
+        start: str = "", show_sem: bool = True) -> None:
     """
-    This function...
+    This function plots the performance of a RL experiment based
+    on the tensorboard events within the mimoEnv/models/ folder.
 
     Arguments:
-        experiment (str): ...
+        experiment (str): Either 'standup' or 'roll_over'.
+        metric (str): The metric from the tensorboard event to plot.
+        ages (list): A list of MIMo's age that should be plotted.
+        start (str): Only relevant for the roll_over experiment. Needs to be
+            'prone' or 'supine'.
+        show_sem (bool): If the standard error of the mean should be plotted.
     """
 
     base_path = r"C:\Users\miles\coding\MIMo\mimoEnv\models\tensorboard_logs"
-
-    ages = eval(ages)
 
     results = defaultdict(list)
     for age in ages:
@@ -371,7 +397,8 @@ def tensorboard(
         y_sem = y_std / np.sqrt(len(results[age]))
 
         plt.plot(x, y_mean, label=f"{age} Month(s)")
-        # plt.fill_between(x, y_mean - y_sem, y_mean + y_sem, alpha=0.25)
+        if show_sem:
+            plt.fill_between(x, y_mean - y_sem, y_mean + y_sem, alpha=0.25)
 
     plt.xlabel("Time Steps (Million)")
     plt.ylabel(metric.replace("rollout/", "").replace("_", " ").title())
@@ -382,23 +409,19 @@ def tensorboard(
 
 def video_to_image(
         path: str, overlay: bool = False,
-        count_images: str = None, percentages: str = None) -> None:
+        count_images: int = None, percentages: list = None) -> None:
     """
     This function takes a video and returns an image containing
-    specific frames either as a sequence over as an overlay.
+    specific frames either as a sequence or as an overlay.
 
     Arguments:
         path (str): The path to the video.
         overlay (bool): If the image should be an overlay. Default is false.
-        count_images (str): The amount of images in the sequence.
-        percentages (str): The 'count_images' parameter will select evenly
-            distributed frames. This parameter allows for a more specific
-            selection based on percentages where 0 means the first frame
-            and 100 means the last frame.
+        count_images (int): The amount of images in the sequence. This selects
+            evenly distributed frames.
+        percentages (list): Select specific frames based on percentages where
+            0 means the first frame and 100 means the last frame.
     """
-
-    percentages = eval(percentages) if percentages else None
-    count_images = int(count_images) if count_images is not None else None
 
     cap = cv2.VideoCapture(path)
     total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
@@ -410,7 +433,7 @@ def video_to_image(
         frame_indices = np.linspace(
             0, total_frames - 1, count_images, dtype=int)
     else:
-        raise ValueError("...")
+        raise ValueError("Either 'count_images' or 'percentages' must be set.")
 
     frames = []
     for idx in frame_indices:
@@ -449,11 +472,11 @@ if __name__ == "__main__":
 
     func_map = {
         "growth_function": growth_function,
-        "quick": quick,
         "all_growth_functions": all_growth_functions,
-        "different_function_types": different_function_types,
+        "diff_func_type": diff_func_type,
         "multiple_functions": multiple_functions,
         "density": density,
+        "growth_param": growth_param,
         "comparison_who": comparison_who,
         "tensorboard": tensorboard,
         "video_to_image": video_to_image,
@@ -476,6 +499,9 @@ if __name__ == "__main__":
     kwargs = {}
     for param in parser.parse_args().kwargs:
         key, value = param.split("=")
-        kwargs[key] = value
+        try:
+            kwargs[key] = eval(value)
+        except (NameError, SyntaxError):
+            kwargs[key] = value
 
     func_map[parser.parse_args().function](**kwargs)

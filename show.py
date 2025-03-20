@@ -358,7 +358,7 @@ def multiple_mimos() -> None:
 
 
 def strength_test(action: str = None, pos: str = "stand",
-                  age: str = "None", active: str = "False") -> None:
+                  age: float = "None", active: bool = False) -> None:
     """
     This function will perform a strength test with MIMo.
     In order to do this, the following steps are performed:
@@ -371,13 +371,11 @@ def strength_test(action: str = None, pos: str = "stand",
         - action (str): The action MIMo should perform. Default is none.
         - pos (str): The starting position of MIMo. This needs to match with
             the function `adjust_pos`. Default is 'stand'.
-        - age (str): The age of MIMo. Default is none which means the original
-            model is used.
-        - active (str): If the MuJoCo viewer should be active. This disables
+        - age (float): The age of MIMo. Default is none which means the
+            original model is used.
+        - active (bool): If the MuJoCo viewer should be active. This disables
             the action parameter. Default is false.
     """
-
-    age, active = eval(age), eval(active)
 
     if age is not None:
         growth_model = adjust_mimo_to_age(age, SCENE_PATH, False)
@@ -496,6 +494,9 @@ if __name__ == "__main__":
     kwargs = {}
     for param in parser.parse_args().kwargs:
         key, value = param.split("=")
-        kwargs[key] = value
+        try:
+            kwargs[key] = eval(value)
+        except NameError:
+            kwargs[key] = value
 
     func_map[parser.parse_args().function](**kwargs)
