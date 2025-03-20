@@ -361,8 +361,20 @@ def tensorboard(
         experiment: str, metric: str, ages: list,
         start: str = "", show_sem: bool = True) -> None:
     """
-    This function plots the performance of a RL experiment based
+    This function plots the average performance of a RL experiment based
     on the tensorboard events within the mimoEnv/models/ folder.
+
+    Note that the illustrations.py file was used to perform the experiments
+    and that this function only works for standup and roll_over tests.
+
+    It is important that the experiments are saved in the following format:
+    - Roll-Over: <starting_position>_age<t>_<version>
+    - Standup: age<t>_<version>
+    The starting position is either 'prone' or 'supine'. The age describes the
+    age of MIMo when the experiment was done and the version can be anything
+    that distinctly identifies experiments with the same settings. This is
+    necessary to repeat an experiment multiple times and the plot the
+    average performance.
 
     Arguments:
         experiment (str): Either 'standup' or 'roll_over'.
