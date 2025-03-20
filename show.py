@@ -1,11 +1,11 @@
 """ This module contains various functions for displaying MIMo. """
 
-from mimoGrowth.growth import adjust_mimo_to_age, delete_growth_scene, \
-    calc_growth_params
-import mimoEnv.utils as mimo_utils
-import mimoGrowth.utils as utils
-from mimoGrowth.mujoco.geom_handler import calc_geom_params
-from mimoGrowth.mujoco.body_handler import calc_body_params
+from resources.mimoGrowth.growth import adjust_mimo_to_age, \
+    delete_growth_scene, calc_growth_params
+import resources.mimoEnv.utils as mimo_utils
+import resources.mimoGrowth.utils as utils
+from resources.mimoGrowth.mujoco.geom_handler import calc_geom_params
+from resources.mimoGrowth.mujoco.body_handler import calc_body_params
 import time
 import argparse
 import os
@@ -15,6 +15,9 @@ from mujoco import MjModel, MjData
 import mujoco.viewer
 import numpy as np
 import xml.etree.ElementTree as ET
+
+
+SCENE_PATH = "resources/mimoEnv/assets/growth.xml"
 
 
 def adjust_pos(pos: str, model: MjModel, data: MjData) -> None:
@@ -163,9 +166,7 @@ def growth() -> None:
         elif keycode == 341:  # strg
             state["reset"] = True
 
-    path = "mimoEnv/assets/growth.xml"
-
-    model = mujoco.MjModel.from_xml_path(path)
+    model = mujoco.MjModel.from_xml_path(SCENE_PATH)
     data = mujoco.MjData(model)
 
     measurements = utils.load_measurements()
@@ -184,7 +185,7 @@ def growth() -> None:
         return {"geom": params_geoms, "body": params_bodies}
 
     age_months = 0
-    growth_params = calc_params(age_months, path)
+    growth_params = calc_params(age_months, SCENE_PATH)
     update_mimo(model, data, growth_params)
     adjust_pos("stand", model, data)
 
@@ -205,7 +206,7 @@ def growth() -> None:
 
             if state["reset"]:
                 age_months = 0
-                growth_params = calc_params(age_months, path)
+                growth_params = calc_params(age_months, SCENE_PATH)
                 update_mimo(model, data, growth_params)
                 adjust_pos("stand", model, data)
                 state["reset"], state["paused"] = False, True
@@ -216,7 +217,7 @@ def growth() -> None:
                 continue
 
             age_months = np.round(age_months + 0.05, 2)
-            growth_params = calc_params(age_months, path)
+            growth_params = calc_params(age_months, SCENE_PATH)
             update_mimo(model, data, growth_params)
             adjust_pos("stand", model, data)
 
@@ -234,29 +235,28 @@ def multiple_mimos() -> None:
     """
 
     AGES = [0, 12, 24, 18, 6]
-
-    PATH_SCENE_OG = "mimoEnv/assets/growth.xml"
-    PATH_SCENE_TEMP = "mimoEnv/assets/multiple_mimos.xml"
+    ASSETS_PATH = "resources/mimoEnv/assets/"
+    PATH_SCENE_TEMP = ASSETS_PATH + "multiple_mimos.xml"
 
     temp_files = [PATH_SCENE_TEMP]
 
-    scene = ET.parse(PATH_SCENE_OG).getroot()
+    scene = ET.parse(SCENE_PATH).getroot()
     sc_worldbody = scene.find("worldbody")
     sc_body = sc_worldbody.find("body[@name='mimo_location']")
     sc_include_meta = scene.find("include")
     sc_light = sc_worldbody.findall("light")[1]
 
     joint_ranges = {}
-    model_og = ET.parse("mimoEnv/assets/mimo/MIMo_model.xml").getroot()
+    model_og = ET.parse(ASSETS_PATH + "mimo/MIMo_model.xml").getroot()
     for elem in model_og.iter():
         if elem.tag == "joint":
             joint_ranges[elem.attrib["name"]] = elem.attrib["range"]
 
     for i, age in enumerate(AGES):
 
-        model = mujoco.MjModel.from_xml_path(PATH_SCENE_OG)
+        model = mujoco.MjModel.from_xml_path(SCENE_PATH)
         data = mujoco.MjData(model)
-        growth_params = calc_growth_params(age, PATH_SCENE_OG)
+        growth_params = calc_growth_params(age, SCENE_PATH)
         update_mimo(model, data, growth_params)
 
         height = sum([
@@ -268,7 +268,7 @@ def multiple_mimos() -> None:
         model.body("hip").pos = [0, 0, height]
         mujoco.mj_forward(model, data)
 
-        path_model = f"mimoEnv/assets/mimo/MIMo_model_{i}.xml"
+        path_model = f"{ASSETS_PATH}mimo/MIMo_model_{i}.xml"
         mujoco.mj_saveLastXML(path_model, model)
         temp_files.append(path_model)
 
@@ -292,7 +292,7 @@ def multiple_mimos() -> None:
             path_model, encoding="utf-8", xml_declaration=True
         )
 
-        meta_file = ET.parse("mimoEnv/assets/mimo/MIMo_meta.xml").getroot()
+        meta_file = ET.parse(ASSETS_PATH + "mimo/MIMo_meta.xml").getroot()
 
         valid_keys = [
             "name", "joint1", "joint",
@@ -310,7 +310,7 @@ def multiple_mimos() -> None:
             meta_file.remove(meta_file.find("default"))
             meta_file.remove(meta_file.find("asset"))
 
-        meta_temp_path = f"mimoEnv/assets/mimo/MIMo_meta_{i}.xml"
+        meta_temp_path = f"{ASSETS_PATH}mimo/MIMo_meta_{i}.xml"
         ET.ElementTree(meta_file).write(
             meta_temp_path, encoding="utf-8", xml_declaration=True
         )
@@ -371,16 +371,16 @@ def strength_test(action: str = None, pos: str = "stand",
         - action (str): The action MIMo should perform. Default is none.
         - pos (str): The starting position of MIMo. This needs to match with
             the function `adjust_pos`. Default is 'stand'.
-        - age (str): The age of MIMo. Default is 17.5.
-        - active (str): If the MuJoCo viewer should be active.
-            Default is false.
+        - age (str): The age of MIMo. Default is none which means the original
+            model is used.
+        - active (str): If the MuJoCo viewer should be active. This disables
+            the action parameter. Default is false.
     """
 
     age, active = eval(age), eval(active)
 
-    growth_model = "mimoEnv/assets/growth.xml"
     if age is not None:
-        growth_model = adjust_mimo_to_age(age, growth_model, False)
+        growth_model = adjust_mimo_to_age(age, SCENE_PATH, False)
 
     model = mujoco.MjModel.from_xml_path(growth_model)
     data = mujoco.MjData(model)
