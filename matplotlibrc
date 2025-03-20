@@ -1,0 +1,20 @@
+# Colors.
+axes.prop_cycle     : cycler("color", ["darkorange", "black", '1f77b4', '2ca02c', 'd62728', '9467bd', '8c564b', 'e377c2', '7f7f7f', 'bcbd22', '17becf'])
+
+# Grid.
+axes.grid           : True
+grid.alpha          : 0.5
+
+# Errorbar.
+errorbar.capsize    : 4
+
+# Fontsize.
+axes.labelsize      : 18
+xtick.labelsize     : 15
+ytick.labelsize     : 15
+legend.fontsize     : 16
+
+# Saved Figures.
+savefig.dpi         : 300
+savefig.bbox        : tight
+savefig.pad_inches  : 0
