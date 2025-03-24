@@ -1,0 +1,186 @@
+<mujoco model="MIMo">
+
+	
+	<size nuser_actuator="3" />
+
+	<contact>
+		<pair geom1="lb_24" geom2="ub1_24" condim="1" />
+		<exclude body1="left_eye_24" body2="upper_body_24" />
+		<exclude body1="right_eye_24" body2="upper_body_24" />
+	</contact>
+	
+	<tendon>
+		<fixed class="mimo" name="hip_bend_24" limited="true" range="-.01 .01">
+			<joint joint="robot:hip_bend1_24" coef="1" />
+			<joint joint="robot:hip_bend2_24" coef="-1" />
+		</fixed>
+		<fixed class="mimo" name="hip_rotation_24" limited="true" range="-.01 .01">
+			<joint joint="robot:hip_rot1_24" coef="1" />
+			<joint joint="robot:hip_rot2_24" coef="-1" />
+		</fixed>
+		<fixed class="mimo" name="hip_lean_24" limited="true" range="-.01 .01">
+			<joint joint="robot:hip_lean1_24" coef="1" />
+			<joint joint="robot:hip_lean2_24" coef="-.5" />
+		</fixed>
+		<fixed class="mimo" name="head_limits1_24" limited="true" range="-2.1 2.1">
+			<joint joint="robot:head_swivel_24" coef="1" />
+			<joint joint="robot:head_tilt_side_24" coef="1" />
+		</fixed>
+		<fixed class="mimo" name="head_limits2_24" limited="true" range="-2.1 2.1">
+			<joint joint="robot:head_tilt_24" coef="1" />
+			<joint joint="robot:head_tilt_side_24" coef="1" />
+		</fixed>
+		<fixed class="mimo" name="head_limits3_24" limited="true" range="-2.1 2.1">
+			<joint joint="robot:head_swivel_24" coef="1" />
+			<joint joint="robot:head_tilt_24" coef="1" />
+		</fixed>
+		<fixed class="mimo" name="head_limits1_sym_24" limited="true" range="-2.1 2.1">
+			<joint joint="robot:head_swivel_24" coef="1" />
+			<joint joint="robot:head_tilt_side_24" coef="-1" />
+		</fixed>
+		<fixed class="mimo" name="head_limits2_sym_24" limited="true" range="-2.1 2.1">
+			<joint joint="robot:head_tilt_24" coef="1" />
+			<joint joint="robot:head_tilt_side_24" coef="-1" />
+		</fixed>
+		<fixed class="mimo" name="head_limits3_sym_24" limited="true" range="-2.1 2.1">
+			<joint joint="robot:head_swivel_24" coef="1" />
+			<joint joint="robot:head_tilt_24" coef="-1" />
+		</fixed>
+	</tendon>
+	
+	<sensor>
+		<accelerometer name="vestibular_acc_24" site="vestibular_24" />
+		<gyro name="vestibular_gyro_24" site="vestibular_24" />
+		
+		<torque name="proprio:neck_24" site="torque_neck_24" />
+		<torque name="proprio:left_eye_24" site="torque_left_eye_24" />
+		<torque name="proprio:right_eye_24" site="torque_right_eye_24" />
+		
+		<torque name="proprio:trunk_upper_24" site="torque_ub_24" />
+		<torque name="proprio:trunk_lower_24" site="torque_lb_24" />
+		
+		<torque name="proprio:right_shoulder_24" site="torque_right_shoulder_24" />
+		<torque name="proprio:right_elbow_24" site="torque_right_elbow_24" />
+		<torque name="proprio:right_wrist_24" site="torque_right_wrist_24" />
+		<torque name="proprio:right_fingers_24" site="torque_right_fingers_24" />
+		
+		<torque name="proprio:left_shoulder_24" site="torque_left_shoulder_24" />
+		<torque name="proprio:left_elbow_24" site="torque_left_elbow_24" />
+		<torque name="proprio:left_wrist_24" site="torque_left_wrist_24" />
+		<torque name="proprio:left_fingers_24" site="torque_left_fingers_24" />
+		
+		<torque name="proprio:right_hip_24" site="torque_right_hip_24" />
+		<torque name="proprio:right_knee_24" site="torque_right_knee_24" />
+		<torque name="proprio:right_ankle_24" site="torque_right_ankle_24" />
+		<torque name="proprio:right_toes_24" site="torque_right_toes_24" />
+		
+		<torque name="proprio:left_hip_24" site="torque_left_hip_24" />
+		<torque name="proprio:left_knee_24" site="torque_left_knee_24" />
+		<torque name="proprio:left_ankle_24" site="torque_left_ankle_24" />
+		<torque name="proprio:left_toes_24" site="torque_left_toes_24" />
+	</sensor>
+
+    <actuator>
+		<motor class="mimo" name="act:hip_bend_24" joint="robot:hip_bend1_24" gear="11.445274022776466" forcerange="-1 .765" user=".8574 32.93 22.97" />
+		<motor class="mimo" name="act:hip_twist_24" joint="robot:hip_rot1_24" gear="3.9268756807824734" forcerange="-1 1" user="1.699 8.136 8.136" />
+		<motor class="mimo" name="act:hip_lean_24" joint="robot:hip_lean1_24" gear="7.842933522223948" forcerange="-1 1" user="1.278 1.264 1.264" />
+
+		<motor class="mimo" name="act:head_swivel_24" joint="robot:head_swivel_24" gear="1.9723820572800088" forcerange="-1 1" user=".6665 24.87 24.87" />
+		<motor class="mimo" name="act:head_tilt_24" joint="robot:head_tilt_24" gear="3.6160337716800153" forcerange="-1 .55" user=".9338 31.39 16.86" />
+		<motor class="mimo" name="act:head_tilt_side_24" joint="robot:head_tilt_side_24" gear="1.9723820572800088" forcerange="-1 1" user="1.068 15.69 15.69" />
+
+		<motor class="mimo" name="act:left_eye_horizontal_24" joint="robot:left_eye_horizontal_24" gear="0.005917146171840027" forcerange="-1 1" user="5.110 .03025 .03025" />
+		<motor class="mimo" name="act:left_eye_vertical_24" joint="robot:left_eye_vertical_24" gear="0.005917146171840027" forcerange="-1 1" user="6.179 .02619 .02771" />
+		<motor class="mimo" name="act:left_eye_torsional_24" joint="robot:left_eye_torsional_24" gear="0.004054340895520018" forcerange="-1 1" user="25.03 .003686 .003686" />
+		<motor class="mimo" name="act:right_eye_horizontal_24" joint="robot:right_eye_horizontal_24" gear="0.005917146171840027" forcerange="-1 1" user="5.110 .03025 .03025" />
+		<motor class="mimo" name="act:right_eye_vertical_24" joint="robot:right_eye_vertical_24" gear="0.005917146171840027" forcerange="-1 1" user="6.179 .02619 .02771" />
+		<motor class="mimo" name="act:right_eye_torsional_24" joint="robot:right_eye_torsional_24" gear="0.004054340895520018" forcerange="-1 1" user="25.03 .003686 .003686" />
+
+		<motor class="mimo" name="act:right_shoulder_horizontal_24" joint="robot:right_shoulder_horizontal_24" gear="2.1532200911365003" forcerange="-1 1" user="1.811 18.80 15.30" />
+		<motor class="mimo" name="act:right_shoulder_abduction_24" joint="robot:right_shoulder_ad_ab_24" gear="4.78493353585889" forcerange="-.6875 1" user=".8793 44.17 69.23" />
+		<motor class="mimo" name="act:right_shoulder_internal_24" joint="robot:right_shoulder_rotation_24" gear="2.9905834599118064" forcerange="-1 .64" user="1.498 25.09 17.10" />
+		<motor class="mimo" name="act:right_elbow_24" joint="robot:right_elbow_24" gear="4.3602089879735" forcerange="-1 .83" user="1.566 35.43 27.04" />
+		<motor class="mimo" name="act:right_wrist_rotation_24" joint="robot:right_hand1_24" gear="0.8041257744098732" forcerange="-1 1" user="1.513 7.842 7.842" />
+		<motor class="mimo" name="act:right_wrist_flexion_24" joint="robot:right_hand2_24" gear="1.4244513718117757" forcerange="-1 .57" user="1.455 13.66 7.874" />
+		<motor class="mimo" name="act:right_wrist_ulnar_24" joint="robot:right_hand3_24" gear="1.091313550984828" forcerange="-.87 1" user="2.254 5.155 6.021" />
+		<motor class="mimo" name="act:right_fingers_24" joint="robot:right_fingers_24" gear="0.7926382633468751" forcerange="-1 .33" user="3.019 6.854 2.551" />
+		
+		<motor class="mimo" name="act:left_shoulder_horizontal_24" joint="robot:left_shoulder_horizontal_24" gear="2.1532200911365003" forcerange="-1 1" user="1.811 18.80 15.30" />
+		<motor class="mimo" name="act:left_shoulder_abduction_24" joint="robot:left_shoulder_ad_ab_24" gear="4.78493353585889" forcerange="-.6875 1" user=".8793 44.17 69.23" />
+		<motor class="mimo" name="act:left_shoulder_internal_24" joint="robot:left_shoulder_rotation_24" gear="2.9905834599118064" forcerange="-1 .64" user="1.498 25.09 17.10" />
+		<motor class="mimo" name="act:left_elbow_24" joint="robot:left_elbow_24" gear="4.3602089879735" forcerange="-1 .83" user="1.566 35.43 27.04" />
+		<motor class="mimo" name="act:left_wrist_rotation_24" joint="robot:left_hand1_24" gear="0.8041257744098732" forcerange="-1 1" user="1.513 7.842 7.842" />
+		<motor class="mimo" name="act:left_wrist_flexion_24" joint="robot:left_hand2_24" gear="1.4244513718117757" forcerange="-1 .57" user="1.455 13.66 7.874" />
+		<motor class="mimo" name="act:left_wrist_ulnar_24" joint="robot:left_hand3_24" gear="1.091313550984828" forcerange="-.87 1" user="2.254 5.155 6.021" />
+		<motor class="mimo" name="act:left_fingers_24" joint="robot:left_fingers_24" gear="0.7926382633468751" forcerange="-1 .33" user="3.019 6.854 2.551" />
+		
+		<motor class="mimo" name="act:right_hip_flex_24" joint="robot:right_hip1_24" gear="10.79160451329873" forcerange="-1 1" user="1.083 71.25 92.49" />
+		<motor class="mimo" name="act:right_hip_abduction_24" joint="robot:right_hip2_24" gear="8.41745152037301" forcerange="-1 1" user="1.488 24.81 29.20" />
+		<motor class="mimo" name="act:right_hip_rotation_24" joint="robot:right_hip3_24" gear="4.775284997134688" forcerange="-.75 1" user="1.860 12.32 15.78" />
+		<motor class="mimo" name="act:right_knee_24" joint="robot:right_knee_24" gear="12.524757082073558" forcerange="-.65 1" user="1.450 63.16 89.27" />
+		<motor class="mimo" name="act:right_foot_flexion_24" joint="robot:right_foot1_24" gear="5.14155614876697" forcerange="-1 .5" user="1.430 21.34 11.87" />
+		<motor class="mimo" name="act:right_foot_inversion_24" joint="robot:right_foot2_24" gear="1.5778320456533557" forcerange="-.91 1" user="1.988 4.184 4.645" />
+		<motor class="mimo" name="act:right_foot_rotation_24" joint="robot:right_foot3_24" gear="1.6322400472276095" forcerange="-1 1" user="2.688 3.868 3.625" />
+		<motor class="mimo" name="act:right_toes_24" joint="robot:right_toes_24" gear="0.4488660129875926" forcerange="-1 .3" user="1.290 2.947 .8440" />
+
+		<motor class="mimo" name="act:left_hip_flex_24" joint="robot:left_hip1_24" gear="10.79160451329873" forcerange="-1 1" user="1.083 71.25 92.49" />
+		<motor class="mimo" name="act:left_hip_abduction_24" joint="robot:left_hip2_24" gear="8.41745152037301" forcerange="-1 1" user="1.488 24.81 29.20" />
+		<motor class="mimo" name="act:left_hip_rotation_24" joint="robot:left_hip3_24" gear="4.775284997134688" forcerange="-.75 1" user="1.860 12.32 15.78" />
+		<motor class="mimo" name="act:left_knee_24" joint="robot:left_knee_24" gear="12.524757082073558" forcerange="-.65 1" user="1.450 63.16 89.27" />
+		<motor class="mimo" name="act:left_foot_flexion_24" joint="robot:left_foot1_24" gear="5.14155614876697" forcerange="-1 .5" user="1.430 21.34 11.87" />
+		<motor class="mimo" name="act:left_foot_inversion_24" joint="robot:left_foot2_24" gear="1.5778320456533557" forcerange="-.91 1" user="1.988 4.184 4.645" />
+		<motor class="mimo" name="act:left_foot_rotation_24" joint="robot:left_foot3_24" gear="1.6322400472276095" forcerange="-1 1" user="2.688 3.868 3.625" />
+		<motor class="mimo" name="act:left_toes_24" joint="robot:left_toes_24" gear="0.4488660129875926" forcerange="-1 .3" user="1.290 2.947 .8440" />
+	</actuator>
+
+	<equality> 
+		<joint name="robot:hip_lean1_24" joint1="robot:hip_lean1_24" active="false" polycoef="0 1 0 0 0" />
+		<joint name="robot:hip_rot1_24" joint1="robot:hip_rot1_24" active="false" polycoef="0 1 0 0 0" />
+		<joint name="robot:hip_bend1_24" joint1="robot:hip_bend1_24" active="false" polycoef="0 1 0 0 0" />
+		<joint name="robot:hip_lean2_24" joint1="robot:hip_lean2_24" active="false" polycoef="0 1 0 0 0" />
+		<joint name="robot:hip_rot2_24" joint1="robot:hip_rot2_24" active="false" polycoef="0 1 0 0 0" />
+		<joint name="robot:hip_bend2_24" joint1="robot:hip_bend2_24" active="false" polycoef="0 1 0 0 0" />
+		<joint name="robot:head_swivel_24" joint1="robot:head_swivel_24" active="false" polycoef="0 1 0 0 0" />
+		<joint name="robot:head_tilt_24" joint1="robot:head_tilt_24" active="false" polycoef="0 1 0 0 0" />
+		<joint name="robot:head_tilt_side_24" joint1="robot:head_tilt_side_24" active="false" polycoef="0 1 0 0 0" />
+		<joint name="robot:left_eye_horizontal_24" joint1="robot:left_eye_horizontal_24" active="false" polycoef="0 1 0 0 0" />
+		<joint name="robot:left_eye_vertical_24" joint1="robot:left_eye_vertical_24" active="false" polycoef="0 1 0 0 0" />
+		<joint name="robot:left_eye_torsional_24" joint1="robot:left_eye_torsional_24" active="false" polycoef="0 1 0 0 0" />
+		<joint name="robot:right_eye_horizontal_24" joint1="robot:right_eye_horizontal_24" active="false" polycoef="0 1 0 0 0" />
+		<joint name="robot:right_eye_vertical_24" joint1="robot:right_eye_vertical_24" active="false" polycoef="0 1 0 0 0" />
+		<joint name="robot:right_eye_torsional_24" joint1="robot:right_eye_torsional_24" active="false" polycoef="0 1 0 0 0" />
+		<joint name="robot:right_shoulder_horizontal_24" joint1="robot:right_shoulder_horizontal_24" active="false" polycoef="0 1 0 0 0" />
+		<joint name="robot:right_shoulder_ad_ab_24" joint1="robot:right_shoulder_ad_ab_24" active="false" polycoef="0 1 0 0 0" />
+		<joint name="robot:right_shoulder_rotation_24" joint1="robot:right_shoulder_rotation_24" active="false" polycoef="0 1 0 0 0" />
+		<joint name="robot:right_elbow_24" joint1="robot:right_elbow_24" active="false" polycoef="0 1 0 0 0" />
+		<joint name="robot:right_hand1_24" joint1="robot:right_hand1_24" active="false" polycoef="0 1 0 0 0" />
+		<joint name="robot:right_hand2_24" joint1="robot:right_hand2_24" active="false" polycoef="0 1 0 0 0" />
+		<joint name="robot:right_hand3_24" joint1="robot:right_hand3_24" active="false" polycoef="0 1 0 0 0" />
+		<joint name="robot:right_fingers_24" joint1="robot:right_fingers_24" active="false" polycoef="0 1 0 0 0" />
+		<joint name="robot:left_shoulder_horizontal_24" joint1="robot:left_shoulder_horizontal_24" active="false" polycoef="0 1 0 0 0" />
+		<joint name="robot:left_shoulder_ad_ab_24" joint1="robot:left_shoulder_ad_ab_24" active="false" polycoef="0 1 0 0 0" />
+		<joint name="robot:left_shoulder_rotation_24" joint1="robot:left_shoulder_rotation_24" active="false" polycoef="0 1 0 0 0" />
+		<joint name="robot:left_elbow_24" joint1="robot:left_elbow_24" active="false" polycoef="0 1 0 0 0" />
+		<joint name="robot:left_hand1_24" joint1="robot:left_hand1_24" active="false" polycoef="0 1 0 0 0" />
+		<joint name="robot:left_hand2_24" joint1="robot:left_hand2_24" active="false" polycoef="0 1 0 0 0" />
+		<joint name="robot:left_hand3_24" joint1="robot:left_hand3_24" active="false" polycoef="0 1 0 0 0" />
+		<joint name="robot:left_fingers_24" joint1="robot:left_fingers_24" active="false" polycoef="0 1 0 0 0" />
+		<joint name="robot:right_hip1_24" joint1="robot:right_hip1_24" active="false" polycoef="0 1 0 0 0" />
+		<joint name="robot:right_hip2_24" joint1="robot:right_hip2_24" active="false" polycoef="0 1 0 0 0" />
+		<joint name="robot:right_hip3_24" joint1="robot:right_hip3_24" active="false" polycoef="0 1 0 0 0" />
+		<joint name="robot:right_knee_24" joint1="robot:right_knee_24" active="false" polycoef="0 1 0 0 0" />
+		<joint name="robot:right_foot1_24" joint1="robot:right_foot1_24" active="false" polycoef="0 1 0 0 0" />
+		<joint name="robot:right_foot2_24" joint1="robot:right_foot2_24" active="false" polycoef="0 1 0 0 0" />
+		<joint name="robot:right_foot3_24" joint1="robot:right_foot3_24" active="false" polycoef="0 1 0 0 0" />
+		<joint name="robot:right_toes_24" joint1="robot:right_toes_24" active="false" polycoef="0 1 0 0 0" />
+		<joint name="robot:left_hip1_24" joint1="robot:left_hip1_24" active="false" polycoef="0 1 0 0 0" />
+		<joint name="robot:left_hip2_24" joint1="robot:left_hip2_24" active="false" polycoef="0 1 0 0 0" />
+		<joint name="robot:left_hip3_24" joint1="robot:left_hip3_24" active="false" polycoef="0 1 0 0 0" />
+		<joint name="robot:left_knee_24" joint1="robot:left_knee_24" active="false" polycoef="0 1 0 0 0" />
+		<joint name="robot:left_foot1_24" joint1="robot:left_foot1_24" active="false" polycoef="0 1 0 0 0" />
+		<joint name="robot:left_foot2_24" joint1="robot:left_foot2_24" active="false" polycoef="0 1 0 0 0" />
+		<joint name="robot:left_foot3_24" joint1="robot:left_foot3_24" active="false" polycoef="0 1 0 0 0" />
+		<joint name="robot:left_toes_24" joint1="robot:left_toes_24" active="false" polycoef="0 1 0 0 0" />
+	</equality>
+	
+</mujoco>
