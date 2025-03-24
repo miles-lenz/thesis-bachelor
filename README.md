@@ -6,6 +6,7 @@ The main contributions of this repository are:
 - `plot.py` : Creates most of the plots for the thesis.
 - `show.py` : Loads MIMo in the MuJoCo viewer and lets him grow or performs a strength test.
 - `media/` : Figures from the thesis and additional material such as the growth video.
+- `paper.py` : Creates all plots and figures for the new MIMo paper.
 
 
 
@@ -16,7 +17,7 @@ The main contributions of this repository are:
     
 ## Usage
 
-The two main scripts can be called with the following command:
+The main scripts can be called with the following command:
 ```python
 python <file> <function_name> <kwargs>
 ```
@@ -30,4 +31,4 @@ Explanation
 ## Acknowledgements
 
 - All growth charts within `resources/growth_charts/` were downloaded from the [official WHO website](https://www.who.int/tools/child-growth-standards/standards).
-- Files within `resources/mimoEnv/` and `resources/mimoGrowth` are copied from the [main repository](https://github.com/trieschlab/MIMo).
+- Files within `resources/mimoEnv/` and `resources/mimoGrowth` are mostly copied from the [main repository](https://github.com/trieschlab/MIMo).
