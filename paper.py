@@ -8,8 +8,10 @@ from resources.mimoGrowth.growth import adjust_mimo_to_age, delete_growth_scene
 import resources.mimoEnv.utils as utils
 import argparse
 import os
+import re
 import mujoco
 import mujoco.viewer
+import numpy as np
 import xml.etree.ElementTree as ET
 from matplotlib import pyplot as plt
 
@@ -129,11 +131,98 @@ def create_mimo_xml(age: float) -> None:
     delete_growth_scene(path_scene_temp)
 
 
+def mimo_stages(age_mimo: float = None, passive: bool = None) -> None:
+    """
+    This method is used to create an image of multiple MIMos at various ages
+    with different poses.
+
+    Note that this script assumes that the only joints in the scene belong
+    to MIMo. Otherwise, the script will break.
+
+    Arguments:
+        age_mimo (float): The age of MIMo. It is important to the associated
+            files are within the 'mimo_ages' folder.
+        passive (bool): If the MuJoCo viewer should be passive.
+    """
+
+    path = "resources/mimoEnv/assets/mimo_stages.xml"
+
+    tree = ET.parse(path)
+    root = tree.getroot()
+
+    ages_order = []
+    for body in root.findall(".//body"):
+        if re.search(r'\d+', body.attrib["name"]):
+            ages_order.append(body.attrib["name"].split("_")[-1])
+
+    if age_mimo is not None:
+
+        for body in root.findall(".//body"):
+            if not re.search(r'\d+', body.attrib["name"]):
+                continue
+            if str(age_mimo) not in body.attrib["name"]:
+                root.find("worldbody").remove(body)
+            # else:
+            #     pos_z = body.attrib["pos"].split(" ")[-1]
+            #     body.attrib["pos"] = f"0 0 {pos_z}"
+
+        for include in root.findall(".//include"):
+            if str(age_mimo) not in include.attrib["file"]:
+                root.remove(include)
+
+        path = path.replace(".xml", "_temp.xml")
+        tree.write(path)
+
+    model = mujoco.MjModel.from_xml_path(path)
+    data = mujoco.MjData(model)
+
+    if age_mimo is not None:
+        os.remove(path)
+
+    root = ET.parse("resources/mimoEnv/assets/mimo_ages/qpos.xml").getroot()
+
+    qpos_by_age = {}
+    for age_group in root.findall(".//age_group"):
+        age = age_group.attrib["name"]
+        qpos_by_age[age] = age_group.find("key").attrib["qpos"].split(" ")
+
+    # Store indices of the free joints and ignore them in the next step.
+    # This allows to modify position/rotation of MIMo via the scene.
+    free_joint_indices = np.array([
+        np.array([0, 1, 3, 4, 5, 6]) + 54 * i
+        for i in range(0, 5)
+    ]).flatten()
+
+    if age_mimo is None:
+
+        qpos = []
+        for age in ages_order:
+            qpos += qpos_by_age[age]
+
+        for i in range(model.nq):
+            if i not in free_joint_indices:
+                data.qpos[i] = qpos[i]
+
+    else:
+
+        for i in range(model.nq):
+            if i not in free_joint_indices:
+                data.qpos[i] = float(qpos_by_age[str(age_mimo)][i])
+
+    mujoco.mj_forward(model, data)
+
+    launch = mujoco.viewer.launch_passive if passive else mujoco.viewer.launch
+    with launch(model, data) as viewer:
+        while viewer.is_running():
+            pass
+
+
 if __name__ == "__main__":
 
     func_map = {
         "strength_test": strength_test,
-        "create_mimo_xml": create_mimo_xml
+        "create_mimo_xml": create_mimo_xml,
+        "mimo_stages": mimo_stages
     }
 
     parser = argparse.ArgumentParser(

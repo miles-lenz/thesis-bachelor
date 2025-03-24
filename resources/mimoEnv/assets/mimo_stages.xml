@@ -1,0 +1,132 @@
+<mujoco model="MIMo">
+
+    <compiler inertiafromgeom="true" angle="degree" />
+    <option timestep="0.005" iterations="50" tolerance="1e-10" solver="Newton" jacobian="dense" cone="elliptic" impratio="1.0" />
+    <size nconmax="1000" njmax="5000" nstack="10000000" />
+
+    <visual>
+        <map force="0.1" fogend="10" shadowclip="3" />
+        <headlight active="0" />
+        <quality shadowsize="0" />
+    </visual>
+
+    <default>
+		<default class="mimo">
+        	<joint limited="true" damping=".1" stiffness=".1" armature="0.001" solimplimit="0.98 0.99 0.001 .5 1" solreflimit="0.02 1" />
+        	<geom condim="3" material="skin" friction="1 0.005 0.0002" solimp="0.95 0.99 0.001 0.5 1" solref="0.005 1" />
+        	<motor ctrlrange="-1 1" ctrllimited="true" forcelimited="true" />
+		</default>
+    </default>
+
+    <asset>
+
+		<texture name="tex_head_default" type="cube" fileright="tex/head_front.png" fileleft="tex/head_back.png" fileup="tex/head_left.png" filedown="tex/head_right.png" filefront="tex/head_top.png" rgb1="0.95 .8 .5" />
+		<texture name="tex_head_happy" type="cube" fileright="tex/head_front_happy.png" fileleft="tex/head_back.png" fileup="tex/head_left.png" filedown="tex/head_right.png" filefront="tex/head_top.png" rgb1="0.95 .8 .5" />
+		<texture name="tex_head_sad" type="cube" fileright="tex/head_front_sad.png" fileleft="tex/head_back.png" fileup="tex/head_left.png" filedown="tex/head_right.png" filefront="tex/head_top.png" rgb1="0.95 .8 .5" />
+		<texture name="tex_head_surprised" type="cube" fileright="tex/head_front_surprised.png" fileleft="tex/head_back.png" fileup="tex/head_left.png" filedown="tex/head_right.png" filefront="tex/head_top.png" rgb1="0.95 .8 .5" />
+		<texture name="tex_head_angry" type="cube" fileright="tex/head_front_angry.png" fileleft="tex/head_back.png" fileup="tex/head_left.png" filedown="tex/head_right.png" filefront="tex/head_top.png" rgb1="0.95 .8 .5" />
+		<texture name="tex_head_disgusted" type="cube" fileright="tex/head_front_disgusted.png" fileleft="tex/head_back.png" fileup="tex/head_left.png" filedown="tex/head_right.png" filefront="tex/head_top.png" rgb1="0.95 .8 .5" />
+		<texture name="tex_head_scared" type="cube" fileright="tex/head_front_scared.png" fileleft="tex/head_back.png" fileup="tex/head_left.png" filedown="tex/head_right.png" filefront="tex/head_top.png" rgb1="0.95 .8 .5" />
+		<texture name="tex_top_sleeve" type="cube" fileright="tex/sleeve_right.png" fileleft="tex/sleeve_left.png" fileup="tex/sleeve_up.png" filedown="tex/sleeve_down.png" filefront="tex/sleeve_front.png" fileback="tex/sleeve_back.png" rgb1="0.95 .8 .5" />
+		<texture name="tex_pants_leg" type="cube" fileright="tex/leg_right.png" fileleft="tex/leg_left.png" fileup="tex/leg_up.png" filedown="tex/leg_down.png" filefront="tex/leg_front.png" fileback="tex/leg_back.png" rgb1="0.95 .8 .5" />
+		<texture name="tex_eye_left" type="cube" fileright="tex/eye_pupil_left.png" rgb1="1 1 1" />
+		<texture name="tex_eye_right" type="cube" fileright="tex/eye_pupil_right.png" rgb1="1 1 1" />
+
+		<material name="skin" rgba="0.95 0.8 0.5 1" specular=".15" shininess=".7" />
+		<material name="buttons" rgba=".05 .05 .05 1" specular=".9" shininess=".9" />
+		<material name="head" texture="tex_head_default" texuniform="true" specular=".0" shininess=".0" />
+		<material name="head_happy" texture="tex_head_happy" texuniform="true" specular=".0" shininess=".0" />
+		<material name="head_sad" texture="tex_head_sad" texuniform="true" specular=".0" shininess=".0" />
+		<material name="head_surprised" texture="tex_head_surprised" texuniform="true" specular=".0" shininess=".0" />
+		<material name="head_angry" texture="tex_head_angry" texuniform="true" specular=".0" shininess=".0" />
+		<material name="head_scared" texture="tex_head_scared" texuniform="true" specular=".0" shininess=".0" />
+		<material name="top_up" rgba=".1 .5 0.0 1" specular=".0" shininess=".0" />
+		<material name="top_middle" rgba=".1 .5 0.0 1" specular=".0" shininess=".0" />
+		<material name="top_down" rgba=".1 .5 0.0 1" specular=".0" shininess=".0" />
+		<material name="top_sleeve" texture="tex_top_sleeve" texuniform="true" specular=".0" shininess=".0" />
+		<material name="pants_up" rgba="0.1 0.1 0.6 1" specular=".0" shininess=".0" />
+		<material name="pants_down" rgba="0.1 0.1 0.6 1" specular=".0" shininess=".0" />
+		<material name="pants_leg" texture="tex_pants_leg" texuniform="true" specular=".0" shininess=".0" />
+		<material name="eye_left" texture="tex_eye_left" texuniform="true" specular=".0" shininess=".0" />
+		<material name="eye_right" texture="tex_eye_right" texuniform="true" specular=".0" shininess=".0" />
+
+		<material name="red" rgba="0.8 0 0 1" specular=".2" shininess=".8"/>
+		<material name="green" rgba="0 0.8 0 1" specular=".2" shininess=".8"/>
+		<material name="blue" rgba="0.15 0.15 1 1" specular=".2" shininess=".8"/>
+		<material name="yellow" rgba="0.7 0.7 0 1" specular=".2" shininess=".8"/>
+		<material name="orange" rgba="0.9 0.4 0 1" specular=".2" shininess=".8"/>
+
+    </asset>
+
+    <asset>
+        <texture type="skybox" builtin="gradient" rgb1=".8 .8 .8" rgb2=".9 .9 .9" width="100" height="100" />
+        <material name="mattransparent" reflectance="0" shininess="0" specular="0" rgba="1 1 1 0" />
+        <texture name="texfloor" builtin="checker" height="100" width="100" rgb1="0.9 0.9 0.9" rgb2="0.9 0.9 0.9" type="2d" mark="edge" markrgb="0.7 0.7 0.7" />
+        <material name="matfloor" reflectance="0" shininess="0" specular="0" texrepeat="25 25" texture="texfloor" />
+        <texture name="texwall" type="2d" builtin="flat" height="100" width="100" rgb1="0.99 0.99 0.99" />
+        <material name="matwall" reflectance="0" shininess="0" specular="0" texuniform="true" texture="texwall" />
+        <texture name="texrug" type="cube" filefront="tex/base_rug.png" rgb1="0.6 0.6 0.6" />
+        <material name="matrug" reflectance="0" shininess=".1" specular="0.5" texrepeat="50 50" texture="texrug" />
+		<material name="brick_red" rgba=".79 .25 .32 1" shininess="0.99" reflectance="0"/>
+    </asset>
+
+    <include file="mimo_ages/MIMo_meta_0.xml" />
+    <include file="mimo_ages/MIMo_meta_6.xml" />
+    <!-- <include file="mimo_ages/MIMo_meta_12.xml" /> -->
+    <include file="mimo_ages/MIMo_meta_18.xml" />
+    <include file="mimo_ages/MIMo_meta_24.xml" />
+
+    <worldbody>
+
+		<camera name="main" pos="2 0 1.8" euler="0 50 90"/>
+
+        <light pos="0 0 5" dir="0 0 -1" directional="true" ambient="0.2 0.2 0.2" diffuse="0.1 0.1 0.1" specular="0 0 0" />
+        <light pos="2 2 2" dir="-1 -1 -1" directional="true" ambient="0.05 0.05 0.05" diffuse="0.2 0.2 0.2" specular="0.3 0.3 0.3" castshadow="false" />
+        <light pos="2 -2 2" dir="-1 1 -1" directional="true" ambient="0.05 0.05 0.05" diffuse="0.2 0.2 0.2" specular="0.3 0.3 0.3" castshadow="false" />
+        <light pos="-2 2 2" dir="1 -1 -1" directional="true" ambient="0.05 0.05 0.05" diffuse="0.2 0.2 0.2" specular="0.3 0.3 0.3" castshadow="false" />
+        <light pos="-2 -2 2" dir="1 1 -1" directional="true" ambient="0.05 0.05 0.05" diffuse="0.2 0.2 0.2" specular="0.3 0.3 0.3" castshadow="false" />
+
+        <geom name="transparent" size="2 2 .0001" type="plane" material="mattransparent" pos="0 0 0" conaffinity="1" />
+        <geom name="floor" size="2 2 .01" type="plane" material="matfloor" pos="0 0 -0.01" conaffinity="1" />
+        <geom name="rug" size="1 .0045" material="matrug" type="cylinder" pos="0 0 -0.005" euler="0 0 0" conaffinity="1" />
+
+        <body name="mimo_location_0" pos="0 -0.6 0" euler="90 -35 90">
+			<freejoint/>
+			<include file="mimo_ages/MIMo_model_0.xml" />
+		</body>
+
+		<body name="mimo_location_6" pos="-0.4 -0.3 0" euler="90 120 -90">
+			<freejoint/>
+			<include file="mimo_ages/MIMo_model_6.xml" />
+			<geom type="box" material="brick_red" size="0.03 0.03 0.03" pos="0 0 0.35" density="200"/>
+		</body>
+
+		<!-- <body name="mimo_location_12" pos="0 0 0" euler="0 0 0">
+			<freejoint/>
+			<include file="mimo_ages/MIMo_model_12.xml" />
+		</body> -->
+
+		<body name="mimo_location_18" pos="-0.4 0.25 0" euler="0 0 -15">
+			<freejoint/>
+			<include file="mimo_ages/MIMo_model_18.xml" />
+		</body>
+
+		<body name="mimo_location_24" pos="0 0.65 0" euler="0 0 -42">
+			<freejoint/>
+			<include file="mimo_ages/MIMo_model_24.xml" />
+		</body>
+
+		<!-- <body name="toys" pos="0.3 0 0">
+			<body name="stack" pos="0 0 0" euler="0 0 50">
+				<geom type="box" material="red" size="0.03 0.03 0.03" pos="0 0 0.03"/>
+				<geom type="box" material="yellow" size="0.03 0.03 0.03" pos="0.08 0 0.03"/>
+				<geom type="box" material="blue" size="0.03 0.03 0.03" pos="0.04 0 0.09"/>
+			</body>
+			<geom type="sphere" material="green" size="0.025" pos="0 0.1 0.025"/>
+			<geom type="sphere" material="blue" size="0.02" pos="-0.1 0.2 0.02"/>
+			<geom type="sphere" material="orange" size="0.015" pos="0.05 0.2 0.015"/>
+		</body> -->
+
+	</worldbody>
+
+</mujoco>
