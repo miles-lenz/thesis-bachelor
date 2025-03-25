@@ -240,12 +240,39 @@ def mimo_stages(
             pass
 
 
+def mimo_detail(passive: bool = False) -> None:
+    """
+    This function shows MIMo holding a ball at his youngest and oldest age.
+
+    Arguments:
+        passive (bool): If the MuJoCo viewer should be passive.
+    """
+
+    path = "resources/mimoEnv/assets/mimo_detail.xml"
+
+    model = mujoco.MjModel.from_xml_path(path)
+    data = mujoco.MjData(model)
+
+    tree = ET.parse("resources/mimoEnv/assets/mimo_ages/qpos_detail.xml")
+    root = tree.getroot()
+
+    qpos = root.attrib["qpos"].split(" ")
+    for i in range(model.nq):
+        data.qpos[i] = qpos[i]
+
+    launch = mujoco.viewer.launch_passive if passive else mujoco.viewer.launch
+    with launch(model, data) as viewer:
+        while viewer.is_running():
+            pass
+
+
 if __name__ == "__main__":
 
     func_map = {
         "strength_test": strength_test,
         "create_mimo_xml": create_mimo_xml,
-        "mimo_stages": mimo_stages
+        "mimo_stages": mimo_stages,
+        "mimo_detail": mimo_detail
     }
 
     parser = argparse.ArgumentParser(
