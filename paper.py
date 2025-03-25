@@ -3,17 +3,20 @@ This module contains functions that are used exclusively to create figures
 and plots for the MIMo paper.
 """
 
-from show import adjust_pos
-from resources.mimoGrowth.growth import adjust_mimo_to_age, delete_growth_scene
-import resources.mimoEnv.utils as utils
-import argparse
 import os
 import re
+import argparse
+
+import cv2
 import mujoco
 import mujoco.viewer
 import numpy as np
 import xml.etree.ElementTree as ET
 from matplotlib import pyplot as plt
+
+from show import adjust_pos
+from resources.mimoGrowth.growth import adjust_mimo_to_age, delete_growth_scene
+import resources.mimoEnv.utils as utils
 
 
 def strength_test() -> None:
@@ -131,7 +134,10 @@ def create_mimo_xml(age: float) -> None:
     delete_growth_scene(path_scene_temp)
 
 
-def mimo_stages(age_mimo: float = None, passive: bool = None) -> None:
+def mimo_stages(
+        age_mimo: float = None,
+        passive: bool = None,
+        save: bool = False) -> None:
     """
     This method is used to create an image of multiple MIMos at various ages
     with different poses.
@@ -143,6 +149,8 @@ def mimo_stages(age_mimo: float = None, passive: bool = None) -> None:
         age_mimo (float): The age of MIMo. It is important to the associated
             files are within the 'mimo_ages' folder.
         passive (bool): If the MuJoCo viewer should be passive.
+        save (bool): If the image should be saved. If save=True the mujoco
+            viewer will not be launched.
     """
 
     path = "resources/mimoEnv/assets/mimo_stages.xml"
@@ -179,7 +187,8 @@ def mimo_stages(age_mimo: float = None, passive: bool = None) -> None:
     if age_mimo is not None:
         os.remove(path)
 
-    root = ET.parse("resources/mimoEnv/assets/mimo_ages/qpos.xml").getroot()
+    tree = ET.parse("resources/mimoEnv/assets/mimo_ages/qpos_stages.xml")
+    root = tree.getroot()
 
     qpos_by_age = {}
     for age_group in root.findall(".//age_group"):
@@ -210,6 +219,20 @@ def mimo_stages(age_mimo: float = None, passive: bool = None) -> None:
                 data.qpos[i] = float(qpos_by_age[str(age_mimo)][i])
 
     mujoco.mj_forward(model, data)
+
+    if save:
+
+        width, height = 1920, 1080
+        renderer = mujoco.Renderer(model, width=width, height=height)
+
+        mujoco.mj_forward(model, data)
+        renderer.update_scene(data, camera="main")
+        img = renderer.render()
+
+        image_bgr = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
+        cv2.imwrite("output.png", image_bgr)
+
+        return
 
     launch = mujoco.viewer.launch_passive if passive else mujoco.viewer.launch
     with launch(model, data) as viewer:
