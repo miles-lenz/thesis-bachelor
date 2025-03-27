@@ -80,7 +80,7 @@
 
     <worldbody>
 
-		<camera name="main" pos="2 0.05 1.8" euler="0 55 90" fovy="30"/>
+		<camera name="main" pos="2 0 1.8" euler="0 55 90" fovy="26"/>
 
         <light pos="0 0 5" dir="0 0 -1" directional="true" ambient="0.2 0.2 0.2" diffuse="0.1 0.1 0.1" specular="0 0 0" />
         <light pos="2 2 2" dir="-1 -1 -1" directional="true" ambient="0.05 0.05 0.05" diffuse="0.2 0.2 0.2" specular="0.3 0.3 0.3" castshadow="false" />
@@ -89,7 +89,7 @@
         <light pos="-2 -2 2" dir="1 1 -1" directional="true" ambient="0.05 0.05 0.05" diffuse="0.2 0.2 0.2" specular="0.3 0.3 0.3" castshadow="false" />
 
         <geom name="transparent" size="2 2 .0001" type="plane"  material="mattransparent" pos="0 0 0" conaffinity="1"/>
-        <geom name="floor" size="5 5 .01" type="plane"  material="matfloor" pos="0 0 -0.01" conaffinity="1"/>
+        <geom name="floor" size="3 3 .01" type="plane"  material="matfloor" pos="0 0 -0.01" conaffinity="1"/>
         <geom name="rug" size="1 .0045" material="matrug" type="cylinder" pos="0 0 -0.005" euler="0 0 0" conaffinity="1"/>
 
         <body name="mimo_location_0" pos="0 -0.6 0" euler="90 -35 90">
@@ -108,7 +108,7 @@
 			<include file="mimo_ages/MIMo_model_12.xml" />
 		</body> -->
 
-		<body name="mimo_location_18" pos="-0.4 0.25 0" euler="0 0 -15">
+		<body name="mimo_location_18" pos="-0.4 0.25 0" euler="0 -10 -15">
 			<freejoint/>
 			<include file="mimo_ages/MIMo_model_18.xml" />
 		</body>

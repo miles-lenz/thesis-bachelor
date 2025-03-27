@@ -87,7 +87,7 @@
 						<site name="torque_left_elbow_18" type="sphere" size="0.01" pos="0 0 0" group="4" />
 						<geom name="left_larm_18" type="capsule" size="0.023506948240346093 0.03832017197473862 0.0" mass="0.19969123831539037" pos="0 0 0.03832017197473862" />
 						<body name="left_hand_18" pos="0 0.007 0.08982282907747041" euler="0 0 0"> 
-							<joint name="robot:left_hand1_18" type="hinge" pos="0 .007 0" axis="0 0 1" springref="-20" range="-90 90" stiffness=".22" damping=".03" frictionloss=".007" armature="0.001" />
+							<joint name="robot:left_hand1_18" type="hinge" pos="0 -.007 0" axis="0 0 1" springref="-20" range="-90 90" stiffness=".22" damping=".03" frictionloss=".007" armature="0.001" />
 							<joint name="robot:left_hand2_18" type="hinge" pos="0 0 0" axis="1 0 0" range="-92 86" stiffness=".33" damping=".11" frictionloss=".007" armature="0.001" />
 							<joint name="robot:left_hand3_18" type="hinge" pos="0 0 0" axis="0 1 0" range="-53 48" stiffness=".38" damping=".11" frictionloss=".007" armature="0.001" />
 							<site name="torque_left_wrist_18" type="sphere" size="0.01" pos="0 0 0" group="4" />
