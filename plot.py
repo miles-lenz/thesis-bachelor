@@ -324,37 +324,41 @@ def comparison_who(metric: str = "height") -> None:
 
     print("100.0%")
 
-    plt.plot(age_mimo, data["mimo"][metric], label="MIMo", zorder=3)
+    plt.plot(
+        age_mimo, data["mimo"][metric],
+        zorder=3, linewidth=5,
+        label="MIMo"
+    )
     plt.errorbar(
         age_who, data["WHO"][metric]["M"][:25].tolist(),
         data["WHO"][metric]["M"][:25] * data["WHO"][metric]["S"][:25],
         linestyle="--", zorder=2,
-        label="Mean with Standard Deviation"
+        label=r"Mean $\pm$ SD"
     )
     plt.fill_between(
         age_who, data["WHO"][metric]["P5"][:25],
         data["WHO"][metric]["P95"][:25],
-        color='gray', alpha=0.3,
-        label="5th - 95th Percentile"
+        color='gray', alpha=0.25,
+        label="P5-P95"
     )
-    plt.fill_between(
-        age_who, data["WHO"][metric]["P10"][:25],
-        data["WHO"][metric]["P90"][:25],
-        color='gray', alpha=0.4,
-        label="10th - 90th Percentile"
-    )
+    # plt.fill_between(
+    #     age_who, data["WHO"][metric]["P10"][:25],
+    #     data["WHO"][metric]["P90"][:25],
+    #     color='gray', alpha=0.2,
+    #     label="10th - 90th Percentile"
+    # )
 
     y_label = {
         "height": "Height (cm)",
         "weight": "Weight (kg)",
         "bmi": "Body Mass Index (BMI)",
-        "head_circumference": "Head Circumference (cm)"
+        "head_circumference": "Head Circ. (cm)"
     }[metric]
 
     plt.xlabel("Age (months)")
     plt.ylabel(y_label)
 
-    plt.legend()
+    plt.legend(loc="lower right")
     plt.show()
 
 

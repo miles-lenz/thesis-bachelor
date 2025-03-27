@@ -13,6 +13,7 @@ import mujoco.viewer
 import numpy as np
 import xml.etree.ElementTree as ET
 from matplotlib import pyplot as plt
+from matplotlib import colors as mcl
 
 from show import adjust_pos
 from resources.mimoGrowth.growth import adjust_mimo_to_age, delete_growth_scene
@@ -83,11 +84,22 @@ def strength_test(body_part: str) -> None:
 
         all_qpos.append(qpos_values)
 
-    for age, qpos in zip(ages, all_qpos):
-        plt.plot(qpos, label=f"{age} month(s)")
+    start_color = plt.get_cmap("tab10")(0)  # tab:blue
+    end_color = plt.get_cmap("tab10")(1)    # tab:orange
+
+    cmap = mcl.LinearSegmentedColormap.from_list(
+        "custom_cmap", [start_color, end_color]
+    )
+
+    color_list = [cmap(i / (len(ages) - 1)) for i in range(len(ages))]
+    color_hex_list = [mcl.to_hex(c) for c in color_list]
+
+    for i, (age, qpos) in enumerate(zip(ages, all_qpos)):
+        color = color_hex_list[i]
+        plt.plot(qpos, label=f"{age} month(s)", color=color)
 
     plt.xlabel("Simulation Steps")
-    plt.ylabel("Normalized Joint Angle (Radians)")
+    plt.ylabel("Normalized Joint Angle")
 
     plt.legend()
     plt.show()

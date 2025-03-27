@@ -358,7 +358,7 @@ def multiple_mimos() -> None:
 
 
 def strength_test(action: str = None, pos: str = "stand",
-                  age: float = "None", active: bool = False) -> None:
+                  age: float = None, active: bool = False) -> None:
     """
     This function will perform a strength test with MIMo.
     In order to do this, the following steps are performed:
