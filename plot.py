@@ -324,11 +324,12 @@ def comparison_who(metric: str = "height") -> None:
 
     print("100.0%")
 
-    plt.plot(age_mimo, data["mimo"][metric], label="MIMo")
+    plt.plot(age_mimo, data["mimo"][metric], label="MIMo", zorder=3)
     plt.errorbar(
         age_who, data["WHO"][metric]["M"][:25].tolist(),
         data["WHO"][metric]["M"][:25] * data["WHO"][metric]["S"][:25],
-        linestyle="--", label="Mean with Standard Deviation"
+        linestyle="--", zorder=2,
+        label="Mean with Standard Deviation"
     )
     plt.fill_between(
         age_who, data["WHO"][metric]["P5"][:25],

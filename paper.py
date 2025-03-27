@@ -19,16 +19,19 @@ from resources.mimoGrowth.growth import adjust_mimo_to_age, delete_growth_scene
 import resources.mimoEnv.utils as utils
 
 
-def strength_test() -> None:
+def strength_test(body_part: str) -> None:
     """
-    This function plots the performance of MIMo for the lifting-legs strength
-    test at different ages.
+    This function plots the performance of MIMo for the lifting-legs or
+    lifting-head strength test at different ages.
 
     The strength test is performed by placing MIMo in a supine position and
-    then fully activating the relevant hip actuators that lift his legs.
+    then fully activating the relevant actuators that to perform the movement.
 
     The x-axis describes the amount of simulation steps, while the y-axis
     shows the normalized hip joint angle.
+
+    Arguments:
+        body_part (str): The body part MIMo will lift.
     """
 
     path = "resources/mimoEnv/assets/growth.xml"
@@ -47,18 +50,28 @@ def strength_test() -> None:
         model.body("growth_references").pos = [0, 0, -5]
         adjust_pos("supine", model, data)
 
-        data.ctrl[28] = -1  # right_hip_flex
-        data.ctrl[36] = -1  # left_hip_flex
+        if body_part == "legs":
+            data.ctrl[28] = -1  # right_hip_flex
+            data.ctrl[36] = -1  # left_hip_flex
+        elif body_part == "head":
+            data.ctrl[4] = 1  # head_tilt
 
         # Make sure that every joint starts with an angle of zero since
         # this is not guaranteed by just bringing MIMo into supine position.
-        utils.set_joint_qpos(model, data, "robot:right_hip1", [0])
-        utils.set_joint_qpos(model, data, "robot:left_hip1", [0])
+        if body_part == "legs":
+            utils.set_joint_qpos(model, data, "robot:right_hip1", [0])
+            utils.set_joint_qpos(model, data, "robot:left_hip1", [0])
+        elif body_part == "head":
+            utils.set_joint_qpos(model, data, "robot:head_tilt", [0])
 
-        joint_id = model.joint("robot:right_hip1").id
+        if body_part == "legs":
+            joint_id = model.joint("robot:right_hip1").id
+        elif body_part == "head":
+            joint_id = model.joint("robot:head_tilt").id
         joint_qpos_index = model.jnt_qposadr[joint_id]
 
-        bound = model.jnt_range[joint_id][0]
+        index = 0 if body_part == "legs" else 1
+        bound = model.jnt_range[joint_id][index]
 
         qpos_values = []
         for _ in range(500):
