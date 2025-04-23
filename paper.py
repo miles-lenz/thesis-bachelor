@@ -36,7 +36,7 @@ def strength_test(body_part: str) -> None:
     """
 
     path = "resources/mimoEnv/assets/growth.xml"
-    ages = [0, 2, 4, 6, 12, 18, 24]
+    ages = [0, 2, 4, 6, 12, 24]
 
     all_qpos = []
     for age in ages:
@@ -94,14 +94,16 @@ def strength_test(body_part: str) -> None:
     color_list = [cmap(i / (len(ages) - 1)) for i in range(len(ages))]
     color_hex_list = [mcl.to_hex(c) for c in color_list]
 
+    _, ax = plt.subplots(figsize=(24 * 0.48, 24 * 0.24))
+
     for i, (age, qpos) in enumerate(zip(ages, all_qpos)):
         color = color_hex_list[i]
-        plt.plot(qpos, label=f"{age} month(s)", color=color)
+        ax.plot(qpos, label=f"{age} month(s)", color=color, linewidth=2)
 
-    plt.xlabel("Simulation Steps")
-    plt.ylabel("Normalized Joint Angle")
+    plt.xlabel("Simulation steps")
+    plt.ylabel("Normalized joint angle")
 
-    plt.legend()
+    plt.legend(loc="upper left")
     plt.show()
 
 

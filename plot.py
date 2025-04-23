@@ -324,22 +324,30 @@ def comparison_who(metric: str = "height") -> None:
 
     print("100.0%")
 
-    plt.plot(
+    _, ax = plt.subplots(figsize=(24 * 0.31, 24 * 0.16))
+
+    ax.plot(
         age_mimo, data["mimo"][metric],
-        zorder=3, linewidth=5,
+        zorder=3, linewidth=2,
         label="MIMo"
     )
-    plt.errorbar(
+    # ax.errorbar(
+    #     age_who, data["WHO"][metric]["M"][:25].tolist(),
+    #     data["WHO"][metric]["M"][:25] * data["WHO"][metric]["S"][:25],
+    #     linestyle="--", zorder=2,
+    #     # label=r"Mean $\pm$ SD"
+    #     label="WHO"
+    # )
+    ax.plot(
         age_who, data["WHO"][metric]["M"][:25].tolist(),
-        data["WHO"][metric]["M"][:25] * data["WHO"][metric]["S"][:25],
         linestyle="--", zorder=2,
-        label=r"Mean $\pm$ SD"
+        label="WHO"
     )
-    plt.fill_between(
+    ax.fill_between(
         age_who, data["WHO"][metric]["P5"][:25],
         data["WHO"][metric]["P95"][:25],
         color='gray', alpha=0.25,
-        label="P5-P95"
+        # label="P5-P95",
     )
     # plt.fill_between(
     #     age_who, data["WHO"][metric]["P10"][:25],
@@ -352,7 +360,7 @@ def comparison_who(metric: str = "height") -> None:
         "height": "Height (cm)",
         "weight": "Weight (kg)",
         "bmi": "Body Mass Index (BMI)",
-        "head_circumference": "Head Circ. (cm)"
+        "head_circumference": "Circumference (cm)"
     }[metric]
 
     plt.xlabel("Age (months)")
